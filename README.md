@@ -1,76 +1,69 @@
 ## Introduction
-Git is actually a tool to build copy of files. You may be using 'cp' command in Linux to copy files, right ? So you will be asking what is the difference between using 'cp' command and 'git' command! Before addressing that, we need to know why we need copy of files or what's the requirement of that.
+Git is a tool for building copies of files. You're probably copying files with the 'cp' command on Linux, right? So, what's the difference between using the 'cp' command and the 'git' command? Before we can solve it, we must first understand why we desire a copy of the files or what the demand is.
 
-Suppose you're writing a giant code for an app. You're an expert and you can complete the code in one stretch sit. But what if you want to test each section of the code.By using staging method we can achive that and it helps us to roll back to the previous version that we want. 
+Assume you're building a large piece of code for an app. You're a pro and can crack the code in a single stretch sit. But what if you want to test each section of code separately? We can achieve this by using the staging mechanism, which also allows us to roll back to a previous version.
 
-By using a normal copying we can't achive that because it will overwrite our content with new changes. Where comes our 'git' command. Git copying is more efficient than copying using cp command.
+We won't be able to achieve this with conventional copying because it will overwrite our existing file with new changes. Here comes our 'git'. Git copying is more efficient than copying using cp command.
 
 ## CheckSum value/Hash Value
-We need to understand checksum value in order understand the correct working of git. The hash function comes in play when we need to confirm the source file is came into destination without any modification.
+In order to grasp how git works correctly, we must first understand checksum values. When we need to ensure that the source file arrived at its destination properly, we use the hash function.
 
-File Input ---> Hash function ---> CheckSum value
+>File Input ---> Hash function ---> CheckSum value
 
 ```sh
 $ echo "I'm Linux" > linux.txt
 $ md5sum linux.txt
 5047ee8de8abe2e555b8a42b26a85cc3  linux.txt
 ```
-
-Hash function takes the contents of the file as input. It can be any data and files. Hash function creates a string from the data of the file. It can include alphabets and numerics. The string should be in fixed length. ie, the length of string generated from 1Kb of file and 50Mb file should be same. Hash function created the string from the contents and not from the filename of the file so if the contents are same then checksome value should be same.
+The contents of the file are passed to the hash function as input. It could be any type of data or file. The hash function generates a string from the file's data. It can contain both alphabets and numbers. The string should have a predetermined length. i.e., the string length created from a 1KB file and a 50MB file should be the same. The string was formed by the hash function from the contents of the file rather than the filename, thus if the contents are the same, the checksome value should be the same.
 
 ```sh
-~ ❯ echo "linux" > linux.txt                                                                                                                                06:46:57 PM
-~ ❯ echo "linux" > unix.txt                                                                                                                                 06:47:39 PM
+~ ❯ echo "linux" > linux.txt                                                                                                                             
+~ ❯ echo "linux" > unix.txt                                                                                                                               
 ~ ❯ echo "Linux" > arch.txt 
 
-~ ❯ md5sum linux.txt                                                                                                                                        06:48:00 PM
+~ ❯ md5sum linux.txt                                                                                                                                     
 5bb062356cddb5d2c0ef41eb2660cb06  linux.txt
-~ ❯ md5sum unix.txt                                                                                                                                         06:48:14 PM
+~ ❯ md5sum unix.txt                                                                                                                                       
 5bb062356cddb5d2c0ef41eb2660cb06  unix.txt
-~ ❯ md5sum arch.txt                                                                                                                                         06:48:23 PM
+~ ❯ md5sum arch.txt                                                                                                                                       
 1b61f2a016f7478478fcb13130fcec7b  arch.txt
 ```
-
-Here I've created three files. linux.txt and unix.txt contais the same data but arch.txt contains different data since we user cpaital 'L' in "Linux". Then we've checked the checksum value using a command of md5 function. From that, we can see the checksum value of linux.txt and unix.txt same where arch.txt having a different checksumvalue.
+I've created three files in this folder. The data in linux.txt and unix.txt is the same, but arch.txt is different since we use the capital 'L' in "Linux." The checksum value was then validated using a md5 function. We can observe that the checksum values of linux.txt and unix.txt are the same, however arch.txt has a different checksum value.
 
 ## Working Directory
-The directory we using to copy files with the use of Git is called Working Directory. In order to initialze a working directory we need to run below command in the direcrory that we want.
+Working Directory refers to the directory in which we copy files when using Git. To create a working directory, run the following command in the desired directory.
 
 ```sh
 $ git init
 ```
-
-By initializing the git, git will create a folder ".git" which is called as "Local git repository". Git stores the files we copying to the local git repo.
+When you run git for the first time, it will create a folder named ".git," which is also known as the "Local git repository." Git saves the files we copy to the local git repository.
 
 ## git add
-we can use "git add" command to save a copy of file in the working directory to the git local repository. By executing the git add command, an object is creating by git. So what's an Object ? Git first read the contents of file and create checksum value. The object contain the contents of the file. In order to identify the objects, the object should have object id and object id will be the checksum value of content of the file. 
+To store a copy of a file in the working directory to the git local repository, use the "git add" command. Git creates an object when you run the git add command. So, what exactly is an Object? Git first reads the file's contents and generates a checksum value using hash function. The file's contents are contained in the object. The object should have an object id in order to be identified, and the object id will be the checksum value of the file's content.
 
 ## Index/Staging file
-The file name and object id mappig is done using staging file or index file. The index file contains the list of objects of the files. Let's create two files.
+The staging file or index file is used to map the file name and object id. The index file contains a list of the files' objects. Let's start by making two files.
 
 ```sh
-~ ❯ echo "linux" > linux.txt                                                                                                                                06:46:57 PM
+~ ❯ echo "linux" > linux.txt                                                                                                                             
 ~ ❯ echo "linux" > unix.txt 
 
 ~ ❯ git add linux.txt
 ~ ❯ git add unix.txt
 ```
+When you add unix.txt, git first examines the checksum value of the contents of unix.txt, which will be the same as the checksum value of linux.txt because the contents of both files are the same. Git then checks to see if a file with the same object id already exists. The index file has a file with the same object id as unix.txt, indicating that we have a file with the same contents as linux.txt. Git will not create a new object, but it will update the index file to include uinx.txt with the same object id as linux.txt. Now create another file. 
 
-When you add unix.txt, git first check the checksum value of the contents of unix.txt and it will be same as of linux.txt since the contents are same for both files. Git then check if a file exists with the same object id. The index file contains file with the same object id which means we have a file with the same contents of unix.txt. Git will not create another object however change the index file to include uinx.txt with the same object id of linux.txt.
-
-Now create another file. 
-
-``sh
+```sh
 ~ ❯ echo "Linux" > arch.txt
 ~ ❯ git add arch.txt
 ```
-
-Git first create checksum value of arch.txt with the contents inside it. Check if an object with the same contents exists by using index page. So Git create a new object and keep arch.txt inside it and keep a refernce of it in the index page.
+When you execute the git add command. Git initially generates a checksum value for the contents of arch.txt. Using the index page, see if an item with the same contents exists. So, in Git, build a new object and place arch.txt within it, with a reference to it on the index page.
 
 ## git init
-A local git repository is created when we initialuze git.
+When we run git for the first time, it creates a local git repository.
 ```sh
-~/git-sample master ❯ tree .git                                                                                                                             08:11:55 PM
+~/git-sample master ❯ tree .git                                                                                                                           
 .git ---> Local git repository
 ├── branches
 ├── config
@@ -100,15 +93,14 @@ A local git repository is created when we initialuze git.
 
 9 directories, 16 files
 ```
-
+Configuring git
 ```sh
-~/git-sample master ❯ git config user.name "Vyshnavlal"                                                                                                     08:12:02 PM
+~/git-sample master ❯ git config user.name "Vyshnavlal"                                                                                                   
 ~/git-sample master ❯ git config user.email "vyshnavlal6367@gmail.com"  
 ```
-
-The given credentials are stored in the ".git/config' file
+The credentials provided are saved in the ".git/config" file.
 ```sh
-~/git-sample master ❯ cat .git/config                                                                                                                       08:13:57 PM
+~/git-sample master ❯ cat .git/config                                                                                                                     
 [core]
 	repositoryformatversion = 0
 	filemode = true
@@ -118,11 +110,10 @@ The given credentials are stored in the ".git/config' file
 	name = Vyshnavlal
 	email = vyshnavlal6367@gmail.com
 ```
-
-Now I've created a file.
+I've now created a file called linux.txt.
 ```sh
-~/git-sample master ❯ echo "Linux is awsome" > linux.txt                                                                                                    08:14:49 PM
-~/git-sample master ?1 ❯ git status                                                                                                                         08:15:59 PM
+~/git-sample master ❯ echo "Linux is awsome" > linux.txt                                                                                                 
+~/git-sample master ?1 ❯ git status                                                                                                                       
 On branch master
 
 No commits yet
@@ -133,14 +124,11 @@ Untracked files:
 
 nothing added to commit but untracked files present (use "git add" to track)
 ```
-
-Untracked file means there is no copy for the file in git local repository or there is no object created for the file.
-
-I've added the file to git. Now check the directory strcture before and after of git add
+Here "Untracked file" indicates that there is no copy of the file in the git local repository or that no object has been generated for the file. I've added the file to git. Now compare the directory structure before and after git add.
 ```sh
 Before
 
-~/git-sample master ?1 ❯ tree .git                                                                                                                          08:18:08 PM
+~/git-sample master ?1 ❯ tree .git                                                                                                                       
 .git
 ├── branches
 ├── config
@@ -170,7 +158,7 @@ Before
 
 After
 
-~/git-sample master +1 ❯ tree .git                                                                                                                          08:18:19 PM
+~/git-sample master +1 ❯ tree .git                                                                                                                       
 .git
 ├── branches
 ├── config
@@ -201,42 +189,39 @@ After
     ├── heads
     └── tags
 ```
-An object is created under the "objects" directory and within "9c" folder and having a file inside it called "cc60f784c480237e7111df592197ada5f5ba2d"
+An object is generated in the "objects" directory, within the "9c" folder, with the file "cc60f784c480237e7111df592197ada5f5ba2d" inside it.
 
-Linux is awsome ---> 9ccc60f784c480237e7111df592197ada5f5ba2d (CheckSum value)
+>Linux is awsome ---> 9ccc60f784c480237e7111df592197ada5f5ba2d (CheckSum value)
 
-So why the filename doesn't contain full checksum value? There are limitations for files to include in a directory. To overcome this, git first create a folder with first two letter of checksum value and create a folder inside it with using remaining letters in checksum.
+So, why isn't the complete checksum value included in the filename? There are restrictions on number of files can be included in a directory. To overcome this, git creates a folder with the first two letters of the checksum value and then creates a folder within it with the remaining letters in the checksum.
 
 ## How to view the contents of index/staging file ?
-index is not a regular text file. You need to use the command "git ls-files -s"
+The index file is not a typical text file. You must run the command "git ls-files -s". The index file contains both the object id and the file name.
 
 ```sh
-~/git-sample master +1 ❯ git ls-files -s                                                                                                                    08:26:42 PM
+~/git-sample master +1 ❯ git ls-files -s                                                                                                                 
 100644 9ccc60f784c480237e7111df592197ada5f5ba2d 0	linux.txt
 ```
-The index file contains the object id as well as the file name.
-
 ## How to view the contents inside of an object?
 ```sh
-~/git-sample master +1 ❯ git cat-file -p 9ccc60f784c480237e7111df592197ada5f5ba2d                                                                           08:26:52 PM
+~/git-sample master +1 ❯ git cat-file -p 9ccc60f784c480237e7111df592197ada5f5ba2d                                                                         
 Linux is awsome
 ```
+To view the contents of an object, use the "git cat-file" command followed by the object id.
 
-Use "git cat-file" command followed by the object id to view the contents inside the object.
+We've now created a file called unix.txt with the identical contents as linux.txt. Because both have the same data, no object will be generated for it. However, inside the index file, there will be a mapping of file name to object id.
 
-Now we have created a called unix.txt with the same contents of linux.txt. There will be no object created for it because both contais same data inside. However there will mapping of file name with object id inside the index file.
 ```sh
-~/git-sample master +2 ❯ git ls-files -s                                                                                                                    08:31:30 PM
+~/git-sample master +2 ❯ git ls-files -s                                                                                                                 
 100644 9ccc60f784c480237e7111df592197ada5f5ba2d 0	linux.txt
 100644 9ccc60f784c480237e7111df592197ada5f5ba2d 0	unix.txt
 ```
-
-Now we have created another file called arch.txt with the some diferrent contents. This time a new object will be created. See below.
+We've now created a new file called arch.txt with somewhat different contents. A new object will be created this time. See the below.
 ```sh
-~/git-sample master +2 ❯ echo "Arch is cool" > arch.txt                                                                                                     08:31:36 PM
-~/git-sample master +2 ?1 ❯ git add arch.txt                                                                                                                08:35:10 PM
+~/git-sample master +2 ❯ echo "Arch is cool" > arch.txt                                                                                                   
+~/git-sample master +2 ?1 ❯ git add arch.txt                                                                                                             
 
-~/git-sample master +3 ❯ tree .git                                                                                                                          08:35:16 PM
+~/git-sample master +3 ❯ tree .git                                                                                                                       
 .git
 ├── branches
 ├── config
@@ -271,7 +256,7 @@ Now we have created another file called arch.txt with the some diferrent content
 
 11 directories, 19 files
 
-~/git-sample master +3 ❯ git ls-files -s                                                                                                                    08:35:19 PM
+~/git-sample master +3 ❯ git ls-files -s                                                                                                                 
 100644 d61b84f8daa3bb91b3a478ab061223410dc3b681 0	arch.txt
 100644 9ccc60f784c480237e7111df592197ada5f5ba2d 0	linux.txt
 100644 9ccc60f784c480237e7111df592197ada5f5ba2d 0	unix.txt
