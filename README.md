@@ -1,4 +1,4 @@
-#Git- A short deep dive
+# Git- A short deep dive
 
 ## Introduction
 Git is a tool for building copies of files. You're probably copying files with the 'cp' command on Linux, right? So, what's the difference between using the 'cp' command and the 'git' command? Before we can solve it, we must first understand why we desire a copy of the files or what the demand is.
